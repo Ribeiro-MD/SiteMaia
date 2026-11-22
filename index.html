@@ -348,7 +348,7 @@ por "- " é um facto; o resto é ignorado.</span>
         <ul class="pontos">
           <li><b>Lembretes a sério.</b> "Lembra-me amanhã às 9h do teste" ou "daqui a 10 minutos tira a pizza". Na hora aparece uma notificação do KDE e ela diz-te em voz alta, mesmo com a janela fechada.</li>
           <li><b>Leve quando não a usas.</b> Com a janela fechada, o WebKit sai da memória e fica só o essencial: cerca de um terço da memória da janela aberta.</li>
-          <li><b>Um clique para voltar.</b> Clica no ícone da bandeja, ou abre "MAIA" no menu, e a conversa está onde a deixaste.</li>
+          <li><b>Um clique para voltar.</b> Clica no ícone da bandeja, ou abre "MAIA" no menu, e a conversa está onde a deixaste. Para a fechar de vez, usa "Sair" no menu do ícone.</li>
           <li><b>Vê o que lhe mostras.</b> Anexa imagens e PDFs com 📎, arrasta-os para a janela ou cola com Ctrl+V. O botão 📷 mostra-lhe o teu ecrã: "o que diz este erro?"</li>
           <li><b>Arranca com o sistema.</b> Liga a opção em ⚙ Config e ela começa escondida na bandeja sempre que entras.</li>
         </ul>
@@ -372,11 +372,13 @@ por "- " é um facto; o resto é ignorado.</span>
 <span class="p">$ </span>sudo pacman -S --needed rust webkit2gtk-4.1
 <span class="c"># compilar e instalar</span>
 <span class="p">$ </span>cd maia && ./instalar.sh
+<span class="c"># opcional: voz portuguesa local, sem internet (~90 MB)</span>
+<span class="p">$ </span>./instalar-voz-local.sh
 <span class="c"># abrir (ou procura "MAIA" no menu)</span>
 <span class="p">$ </span>maia</pre>
       </div>
       <div class="passos">
-        <div class="cartao"><span class="n">1.º arranque</span><h3>Abre a configuração</h3><p>Sem chaves, a MAIA abre direto na página ⚙ Config, com links para criar as chaves de cada serviço. Gemini, Grok e Groq.</p></div>
+        <div class="cartao"><span class="n">1.º arranque</span><h3>Abre a configuração</h3><p>Sem chaves, a MAIA abre direto na página ⚙ Config, com um link para criar a chave de cada serviço.</p></div>
         <div class="cartao"><span class="n">guardar</span><h3>Reinicia sozinha</h3><p>"Guardar e reiniciar" grava o <code>config.toml</code>, reinicia a MAIA e a janela volta a abrir no chat.</p></div>
         <div class="cartao"><span class="n">segurança</span><h3>Só o teu PC</h3><p>Escuta apenas em <code>127.0.0.1:7878</code> e gera um token novo a cada arranque. Nenhum site consegue mandar-lhe comandos.</p></div>
       </div>
