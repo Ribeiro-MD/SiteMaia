@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MAIA</title>
+<meta name="description" content="MAIA · My Assistant IA. Assistente pessoal para o Arch Linux, by RibeiroMD.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="icon" type="image/svg+xml" href="maia.svg">
+<meta name="theme-color" content="#2a0a24">
+<style>
+  /* Layout: uma coluna central; o herói é o reator da própria app, o resto são secções
+     que mostram a MAIA a trabalhar (chat, chaves, nota do Obsidian, config). Tema rosita, só escuro. */
+  :root {
+    --bg: #1a0016;
+    --bg-alt: #230a1d;
+    --header: #2a0a24;
+    --card: #2b1025;
+    --border: #4a2040;
+    --text: #ffffff;
+    --muted: #d9bfd0;
+    --accent: #a8456a;
+    --accent-soft: #d9a0b4;
+    --ring: #c9779a;
+    --ok: #3ddc97;
+    --warn: #ffb547;
+    --radius: 16px;
+    --f-text: "Open Sans", "Noto Sans", system-ui, sans-serif;
+    --f-mono: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0;
+    background: var(--bg); color: var(--text); font-family: var(--f-text);
+    font-size: 16px; line-height: 1.6;
+  }
+  a { color: var(--accent-soft); }
+  ::selection { background: color-mix(in srgb, var(--accent) 50%, transparent); }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+  .wrap {
+    max-width: 1040px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* ---------- herói ---------- */
+  .hero {
+    margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1.25rem);
+    padding-bottom: 4rem;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--header), var(--bg));
+    border-bottom: 1px solid var(--border);
+  }
+  nav { display: flex; align-items: center; gap: 14px; padding-block: 6px 0; flex-wrap: wrap; }
+  .marca { display: flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-weight: 600; letter-spacing: 5px; color: var(--accent-soft); text-decoration: none; }
+  .marca i { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #fff0f6 0%, var(--accent-soft) 40%, #5a1a3e 100%); box-shadow: 0 0 10px var(--accent-soft); }
+  nav .espaco { flex: 1; }
+  nav a.link { color: var(--muted); text-decoration: none; font-size: 14px; }
+  nav a.link:hover { color: var(--text); }
+
+  .hero-grelha { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; margin-top: 56px; }
+  .hero-grelha > * { min-width: 0; }
+  .eyebrow { font-family: var(--f-mono); font-size: 13px; color: var(--accent-soft); letter-spacing: 2px; text-transform: uppercase; margin: 0 0 14px; }
+  h1 {
+    margin: 0; font-weight: 800; letter-spacing: -1.5px; line-height: 1.02;
+    font-size: clamp(56px, 11vw, 104px);
+    background: linear-gradient(180deg, #fff 30%, var(--accent-soft));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h1 small { display: block; font-size: .26em; letter-spacing: 1px; font-weight: 600; margin-top: 10px; -webkit-text-fill-color: var(--muted); color: var(--muted); }
+  .tese { font-size: 19px; color: var(--muted); max-width: 30em; margin: 22px 0 28px; text-wrap: balance; }
+  .botoes { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 12px;
+    font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--accent);
+    background: var(--accent); color: #fff; transition: transform .15s, background .15s;
+  }
+  .btn:hover { transform: translateY(-2px); background: var(--ring); }
+  .btn.sec { background: transparent; border-color: var(--ring); color: var(--accent-soft); }
+  .btn.sec:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+
+  /* janela de exemplo */
+  .janela { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 6px color-mix(in srgb, var(--accent) 10%, transparent); }
+  .janela-topo { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--header); border-bottom: 1px solid var(--border); font-family: var(--f-mono); font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .janela-topo b { color: var(--accent-soft); letter-spacing: 3px; margin-right: 4px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px; border-radius: 99px; border: 1px solid var(--border); }
+  .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 5px var(--ok); }
+  .chip.pausa::before { background: var(--warn); box-shadow: 0 0 5px var(--warn); }
+  .reator-mini { display: grid; place-items: center; padding: 18px 0 6px; gap: 10px; }
+  .reator { width: 46px; height: 46px; border-radius: 50%; position: relative;
+    background: radial-gradient(circle, #ffe6f0 0%, var(--accent-soft) 18%, #5a1a3e 45%, transparent 70%);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--ring) 55%, transparent); }
+  .reator::before, .reator::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--ring) 40%, transparent); border-top-color: var(--accent-soft); animation: rodar 6s linear infinite; }
+  .reator::after { inset: -12px; border-width: 1px; animation-duration: 10s; animation-direction: reverse; }
+  .reator-mini span { font-family: var(--f-mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); }
+  @keyframes rodar { to { transform: rotate(360deg); } }
+  .conversa { display: flex; flex-direction: column; gap: 10px; padding: 10px 16px 18px; font-size: 14px; }
+  .msg { max-width: 88%; padding: 9px 13px; border-radius: 14px; }
+  .msg.eu { align-self: flex-end; background: linear-gradient(180deg, #5e2246, #4c1a3a); border: 1px solid #7a3058; border-bottom-right-radius: 4px; }
+  .msg.ela { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+  .exec { margin-top: 7px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); border-left: 2px solid var(--ok); padding-left: 8px; white-space: pre-wrap; }
+  .exec b { color: var(--ok); font-weight: 400; }
+  .meta { display: flex; gap: 6px; align-items: center; margin-top: 6px; font-family: var(--f-mono); font-size: 10px; color: var(--muted); }
+  .prov { padding: 0 5px; border: 1px solid currentColor; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; }
+  .prov.groq { color: #ff8a4c; }
+  .prov.gemini { color: #9fb4ff; }
+  .nota-mem { margin-top: 7px; font-size: 12px; color: var(--accent-soft); background: color-mix(in srgb, var(--accent) 16%, transparent); padding: 4px 8px; border-radius: 6px; }
+
+  /* ---------- secções ---------- */
+  section { padding-block: 72px; border-bottom: 1px solid var(--border); }
+  section:nth-of-type(even) { background: var(--bg-alt); }
+  h2 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 34px); letter-spacing: -.5px; text-wrap: balance; }
+  h2::before { content: "// "; font-family: var(--f-mono); color: var(--accent); font-weight: 400; }
+  .lead { color: var(--muted); max-width: 38em; margin: 0 0 36px; font-size: 17px; }
+  .duas { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .duas > * { min-width: 0; }
+  h3 { margin: 0 0 6px; font-size: 18px; }
+  p { margin: 0 0 12px; }
+  .pontos { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .pontos li { padding-left: 18px; position: relative; color: var(--muted); }
+  .pontos li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--ring); }
+  .pontos b { color: var(--text); }
+
+  .cartao { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: border-color .15s; }
+  .cartao:hover { border-color: var(--ring); }
+  code, .mono { font-family: var(--f-mono); font-size: .9em; }
+  :not(pre) > code { background: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--accent-soft); padding: 1px 6px; border-radius: 6px; }
+
+  /* rotação de chaves */
+  .provs { display: grid; gap: 12px; }
+  .prov-linha { display: grid; grid-template-columns: 74px 1fr auto; gap: 12px; align-items: center; font-family: var(--f-mono); font-size: 13px; }
+  .chaves { display: flex; gap: 5px; flex-wrap: wrap; }
+  .chave { width: 22px; height: 10px; border-radius: 3px; background: color-mix(in srgb, var(--ok) 70%, transparent); }
+  .chave.p { background: var(--warn); }
+  .chave.x { background: var(--border); }
+  .prov-linha small { color: var(--muted); }
+  .regras { margin-top: 16px; display: grid; gap: 6px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+  .regras span b { color: var(--warn); font-weight: 600; }
+
+  /* nota obsidian */
+  .nota { font-family: var(--f-mono); font-size: 13px; line-height: 1.7; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .nota-topo { padding: 8px 14px; background: var(--header); border-bottom: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+  .nota pre { margin: 0; padding: 14px; white-space: pre-wrap; color: var(--text); }
+  .nota .h { color: var(--accent-soft); font-weight: 600; }
+  .nota .c { color: var(--muted); }
+
+  /* vozes */
+  .vozes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .voz { font-family: var(--f-mono); font-size: 12px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); color: var(--muted); }
+  .voz b { color: var(--text); font-weight: 600; }
+  .voz.atual { border-color: var(--ring); background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+  /* instalar */
+  .bloco { position: relative; background: #140010; border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+  .bloco pre { margin: 0; padding: 18px 16px; font-family: var(--f-mono); font-size: 14px; line-height: 1.8; }
+  .bloco .c { color: var(--muted); }
+  .bloco .p { color: var(--accent-soft); user-select: none; }
+  .copiar { position: absolute; top: 8px; right: 8px; font: 600 12px var(--f-text); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; }
+  .copiar:hover { color: var(--text); border-color: var(--ring); }
+  .passos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
+  .passos > * { min-width: 0; }
+  .passos .n { font-family: var(--f-mono); color: var(--accent); font-size: 13px; }
+  .passos p { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+
+  footer { padding-block: 40px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+  footer b { color: var(--accent-soft); letter-spacing: .5px; }
+
+  @media (max-width: 820px) {
+    .hero-grelha, .duas { grid-template-columns: 1fr; }
+    .hero-grelha { margin-top: 36px; gap: 36px; }
+    .passos { grid-template-columns: 1fr; }
+    section { padding-block: 56px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reator::before, .reator::after { animation: none; }
+    .btn, .cartao { transition: none; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <nav>
+      <a class="marca" href="#topo" id="topo"><i></i>M.A.I.A</a>
+      <span class="espaco"></span>
+      <a class="link" href="#cerebros">Cérebros</a>
+      <a class="link" href="#memoria">Memória</a>
+      <a class="link" href="#voz">Voz</a>
+      <a class="link" href="#instalar">Instalar</a>
+    </nav>
+
+    <div class="hero-grelha">
+      <div>
+        <p class="eyebrow">My Assistant IA · Arch Linux + KDE</p>
+        <h1>MAIA<small>a assistente que vive no teu PC</small></h1>
+        <p class="tese">Fala com ela, pede-lhe comandos, deixa-a lembrar-se das coisas. Usa o Gemini, o Grok e a Groq com várias chaves ao mesmo tempo, guarda a memória no teu Obsidian e só responde a quem está no teu computador.</p>
+        <div class="botoes">
+          <a class="btn" href="#instalar">Instalar a MAIA</a>
+          <a class="btn sec" href="#cerebros">Como funciona</a>
+        </div>
+      </div>
+
+      <div class="janela" aria-label="Exemplo de conversa com a MAIA">
+        <div class="janela-topo">
+          <b>M.A.I.A</b>
+          <span class="chip">Gemini 3/3</span>
+          <span class="chip pausa">Groq 10/11</span>
+        </div>
+        <div class="reator-mini"><div class="reator"></div><span>A FALAR</span></div>
+        <div class="conversa">
+          <div class="msg eu">quanto espaço tenho no disco?</div>
+          <div class="msg ela">
+            Tens 212 GB livres no disco principal, cerca de 46%.
+            <div class="exec"><b>$ df -h /</b>
+/dev/nvme0n1p2  468G  233G  212G  53% /</div>
+            <div class="meta"><span class="prov groq">groq</span><span>qwen/qwen3.8-27b · 21:14</span></div>
+          </div>
+          <div class="msg eu">lembra-te que amanhã tenho teste de Kotlin</div>
+          <div class="msg ela">
+            Combinado. Amanhã lembro-te logo de manhã.
+            <div class="nota-mem">💾 Guardei: teste de Kotlin a 23/11</div>
+            <div class="meta"><span class="prov gemini">gemini</span><span>gemini-flash-latest · 21:15</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="cerebros">
+    <div class="wrap">
+      <h2>Três cérebros, muitas chaves</h2>
+      <p class="lead">A MAIA escolhe a IA pelas palavras da tua mensagem: código vai para o Grok, volume e apps para o Gemini. Se uma chave bate no limite, passa para a seguinte. Se um provider fica sem chaves livres, passa para o próximo.</p>
+      <div class="duas">
+        <div class="cartao">
+          <div class="provs">
+            <div class="prov-linha"><span>Gemini</span><div class="chaves"><i class="chave"></i><i class="chave"></i><i class="chave"></i></div><small>3/3</small></div>
+            <div class="prov-linha"><span>Grok</span><div class="chaves"><i class="chave x"></i></div><small>sem chaves</small></div>
+            <div class="prov-linha"><span>Groq</span><div class="chaves"><i class="chave"></i><i class="chave p"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i><i class="chave"></i></div><small>10/11</small></div>
+          </div>
+          <div class="regras">
+            <span><b>429</b> limite atingido → a chave descansa 60 s</span>
+            <span><b>401 / 403</b> chave inválida → fica de fora 1 h</span>
+            <span><b>5xx</b> erro do servidor → tenta outra daqui a 10 s</span>
+          </div>
+        </div>
+        <ul class="pontos">
+          <li><b>Rotas por palavras.</b> "rust", "erro" ou "compila" mandam a pergunta para o Grok; "volume", "abre" ou "música" vão para o Gemini. Tudo isto se muda no <code>config.toml</code>.</li>
+          <li><b>Menu no topo.</b> Também podes escolher à mão: Auto, Gemini, Grok ou Groq.</li>
+          <li><b>Comandos no PC.</b> Programas da lista <code>auto</code> (pactl, playerctl, df…) correm sozinhos. Tudo o resto pede confirmação com um botão Executar.</li>
+          <li><b>Raciocínio escondido.</b> Modelos que pensam em voz alta, como o Qwen, não te enchem o ecrã com o <code>&lt;think&gt;</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="memoria">
+    <div class="wrap">
+      <h2>A memória está no teu Obsidian</h2>
+      <p class="lead">O que importa fica numa nota normal do teu vault. Podes abri-la, corrigir um facto ou apagar outro, e a MAIA lê a versão nova na pergunta seguinte, sem reiniciar.</p>
+      <div class="duas">
+        <div class="nota">
+          <div class="nota-topo">Obsidian Vault / MAIA / Memória.md</div>
+          <pre><span class="h"># Memória da MAIA</span>
+
+<span class="c">O que a MAIA sabe sobre ti. Cada linha começada
+por "- " é um facto; o resto é ignorado.</span>
+
+- gosta de rock
+- usa Arch com KDE Plasma
+- estuda Kotlin e C#
+- teste de Kotlin a 23/11</pre>
+        </div>
+        <ul class="pontos">
+          <li><b>Só o que dura.</b> Preferências, pessoas, projetos, rotinas. A conversa do dia a dia não vai para o vault.</li>
+          <li><b>O histórico fica à parte</b>, em <code>~/.local/share/maia/memoria.json</code>. As últimas 30 mensagens servem de contexto.</li>
+          <li><b>Painel 🧠 Memória</b> na app, para veres os factos e esquecer um com um clique.</li>
+          <li><b>Vault automático.</b> Usa o vault que tens aberto no Obsidian, ou outro que escolhas na configuração.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="voz">
+    <div class="wrap">
+      <h2>Fala enquanto escreve</h2>
+      <p class="lead">Mantém Espaço premido para falar. A resposta é lida frase a frase: a primeira começa a tocar logo e o texto vai aparecendo ao ritmo da voz. Esc cala-a.</p>
+      <div class="vozes" aria-label="Vozes disponíveis">
+        <span class="voz atual"><b>Charon</b> · grave</span>
+        <span class="voz"><b>Kore</b> · firme</span>
+        <span class="voz"><b>Aoede</b> · leve</span>
+        <span class="voz"><b>Sulafat</b> · calorosa</span>
+        <span class="voz"><b>Puck</b> · animada</span>
+        <span class="voz"><b>Leda</b> · jovem</span>
+        <span class="voz"><b>Vindemiatrix</b> · gentil</span>
+        <span class="voz"><b>Gacrux</b> · madura</span>
+        <span class="voz"><b>Achird</b> · simpática</span>
+        <span class="voz"><b>Algenib</b> · rouca</span>
+        <span class="voz">+ 20 vozes</span>
+      </div>
+      <p class="lead" style="margin-top:24px">Escolhe a voz no menu 🎙 do chat. Na configuração há um campo de estilo, por exemplo "português de Portugal, tom calmo de mordomo", e um botão para ouvir antes de guardar.</p>
+    </div>
+  </section>
+
+  <section id="instalar">
+    <div class="wrap">
+      <h2>Instalar</h2>
+      <p class="lead">Precisa de Rust e de um browser Chromium. O script compila, instala o comando <code>maia</code> e põe a MAIA no menu do KDE com ícone próprio.</p>
+      <div class="bloco">
+        <button class="copiar" id="copiar" type="button">Copiar</button>
+<pre id="cmd"><span class="c"># dependências</span>
+<span class="p">$ </span>sudo pacman -S --needed rust chromium
+<span class="c"># compilar e instalar</span>
+<span class="p">$ </span>cd maia && ./instalar.sh
+<span class="c"># abrir (ou procura "MAIA" no menu)</span>
+<span class="p">$ </span>maia</pre>
+      </div>
+      <div class="passos">
+        <div class="cartao"><span class="n">1.º arranque</span><h3>Abre a configuração</h3><p>Sem chaves, a MAIA abre direto na página ⚙ Config, com links para criar chaves Gemini, Grok e Groq.</p></div>
+        <div class="cartao"><span class="n">guardar</span><h3>Reinicia sozinha</h3><p>"Guardar e reiniciar" grava o <code>config.toml</code> e volta ao chat, sem fechar a janela.</p></div>
+        <div class="cartao"><span class="n">segurança</span><h3>Só o teu PC</h3><p>Escuta apenas em <code>127.0.0.1:7878</code> e gera um token novo a cada arranque. Nenhum site consegue mandar-lhe comandos.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><b>MAIA</b> · My Assistant IA</span>
+    <span>By <b>RibeiroMD</b></span>
+  </div>
+</footer>
+
+<script>
+  const btn = document.getElementById("copiar");
+  btn.addEventListener("click", async () => {
+    const texto = document.getElementById("cmd").innerText
+      .split("\n").filter((l) => l.startsWith("$ ")).map((l) => l.slice(2)).join("\n");
+    try {
+      await navigator.clipboard.writeText(texto);
+      btn.textContent = "Copiado";
+    } catch {
+      const r = document.createRange();
+      r.selectNodeContents(document.getElementById("cmd"));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = "Seleciona e copia";
+    }
+    setTimeout(() => (btn.textContent = "Copiar"), 1800);
+  });
+</script>
+</body>
+</html>
