@@ -216,6 +216,7 @@
       <a class="link" href="#cerebros">Cérebros</a>
       <a class="link" href="#memoria">Memória</a>
       <a class="link" href="#voz">Voz</a>
+      <a class="link" href="#perto">Lembretes</a>
       <a class="link" href="#instalar">Instalar</a>
       <a class="link" href="#configurar">Configurar</a>
     </nav>
@@ -247,10 +248,10 @@
 /dev/nvme0n1p2  468G  233G  212G  53% /</div>
             <div class="meta"><span class="prov groq">groq</span><span>qwen/qwen3.8-27b · 21:14</span></div>
           </div>
-          <div class="msg eu">lembra-te que amanhã tenho teste de Kotlin</div>
+          <div class="msg eu">lembra-me amanhã às 9h do teste de Kotlin</div>
           <div class="msg ela">
-            Combinado. Amanhã lembro-te logo de manhã.
-            <div class="nota-mem">💾 Guardei: teste de Kotlin a 23/11</div>
+            Combinado, amanhã às 9h lembro-te do teste.
+            <div class="nota-mem">⏰ Marquei: amanhã às 09:00 — teste de Kotlin</div>
             <div class="meta"><span class="prov gemini">gemini</span><span>gemini-flash-latest · 21:15</span></div>
           </div>
         </div>
@@ -339,6 +340,27 @@ por "- " é um facto; o resto é ignorado.</span>
     </div>
   </section>
 
+  <section id="perto">
+    <div class="wrap">
+      <h2>Sempre por perto</h2>
+      <p class="lead">Fechar a janela não fecha a MAIA: ela fica na bandeja do sistema, gasta pouca memória e continua a cumprir o que prometeu.</p>
+      <div class="duas">
+        <ul class="pontos">
+          <li><b>Lembretes a sério.</b> "Lembra-me amanhã às 9h do teste" ou "daqui a 10 minutos tira a pizza". Na hora aparece uma notificação do KDE e ela diz-te em voz alta, mesmo com a janela fechada.</li>
+          <li><b>Leve quando não a usas.</b> Com a janela fechada, o WebKit sai da memória e fica só o essencial: cerca de um terço da memória da janela aberta.</li>
+          <li><b>Um clique para voltar.</b> Clica no ícone da bandeja, ou abre "MAIA" no menu, e a conversa está onde a deixaste.</li>
+          <li><b>Arranca com o sistema.</b> Liga a opção em ⚙ Config e ela começa escondida na bandeja sempre que entras.</li>
+        </ul>
+        <div class="cartao">
+          <div class="nota-topo" style="margin:-18px -18px 14px;border-radius:var(--radius) var(--radius) 0 0;padding:8px 14px;background:var(--header);border-bottom:1px solid var(--border);font-family:var(--f-mono);font-size:12px;color:var(--muted)">Notificação · 09:00</div>
+          <p style="margin:0 0 4px;font-weight:700">MAIA · Lembrete</p>
+          <p style="margin:0 0 14px;color:var(--muted)">teste de Kotlin</p>
+          <span class="btn sec" style="padding:6px 14px;font-size:13px">Abrir MAIA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="instalar">
     <div class="wrap">
       <h2>Instalar</h2>
@@ -414,6 +436,11 @@ por "- " é um facto; o resto é ignorado.</span>
         <li><div>
           <h3>Liga o Obsidian</h3>
           <p>Deixa o campo <b>Vault</b> vazio para usar o vault que tens aberto no Obsidian. Os factos ficam em <code>MAIA/Memória.md</code>, e a nota aparece quando ela guardar o primeiro.</p>
+        </div></li>
+
+        <li><div>
+          <h3>Deixa-a arrancar com o sistema</h3>
+          <p>Em <b>Geral</b>, liga "Arrancar com o sistema, escondida na bandeja". É isto que garante que os lembretes tocam mesmo depois de reiniciares o PC.</p>
         </div></li>
 
         <li><div>
