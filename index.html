@@ -282,7 +282,8 @@
         <ul class="pontos">
           <li><b>Rotas por palavras.</b> "rust", "erro" ou "compila" mandam a pergunta para o Grok; "volume", "abre" ou "música" vão para o Gemini. Tudo isto se muda no <code>config.toml</code>.</li>
           <li><b>Recurso em cadeia.</b> Se a escolhida falhar, tenta as outras pela ordem Gemini → Grok → Groq → OpenRouter → Cerebras. No menu do topo também escolhes à mão.</li>
-          <li><b>Pesquisa e tempo.</b> Quando a pergunta precisa de informação atual, a MAIA pesquisa na web (Tavily ou Brave) e diz de onde veio. O tempo vem do Open-Meteo, sem chave.</li>
+          <li><b>Diz quando troca de agente.</b> Se uma IA falha, aparece no chat "[GEMINI] ficou indisponível (limite de pedidos atingido). Novo agente ativo: [GROQ]". Um serviço em baixo fica de lado um minuto, para não te fazer esperar.</li>
+          <li><b>Pesquisa e tempo.</b> Quando a pergunta precisa de informação atual, a MAIA pesquisa na web (Tavily ou Brave) e diz de onde veio. O tempo vem do Open-Meteo, sem chave. O que vem das páginas é tratado como dados: se uma página tentar dar ordens, a MAIA não lhe obedece, não guarda memórias e qualquer comando pede a tua confirmação com um aviso.</li>
           <li><b>Comandos no PC.</b> Programas da lista <code>auto</code> (pactl, playerctl, df…) correm sozinhos. Tudo o resto pede confirmação com um botão Executar.</li>
           <li><b>Raciocínio escondido.</b> Modelos que pensam em voz alta, como o Qwen, não te enchem o ecrã com o <code>&lt;think&gt;</code>.</li>
         </ul>
@@ -320,7 +321,7 @@ por "- " é um facto; o resto é ignorado.</span>
   <section id="voz">
     <div class="wrap">
       <h2>Fala enquanto escreve</h2>
-      <p class="lead">Mantém Espaço premido para falar: o Whisper da Groq transcreve em menos de um segundo, e o Gemini fica de reserva. A resposta é lida frase a frase: a primeira começa a tocar logo e o texto vai aparecendo ao ritmo da voz. Esc cala-a.</p>
+      <p class="lead">Mantém Espaço premido para falar: o Whisper da Groq transcreve em menos de um segundo, e o Gemini fica de reserva. A resposta chega aos bocados: o texto aparece enquanto a IA escreve e cada frase vai para a voz assim que fica completa, por isso ela começa a falar quase de imediato. Esc cala-a.</p>
       <div class="vozes" aria-label="Vozes disponíveis">
         <span class="voz atual"><b>Charon</b> · grave</span>
         <span class="voz"><b>Kore</b> · firme</span>
